@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,28 +14,32 @@ using Newtonsoft.Json;
 
 namespace NotesPlus
 {
-    public static class Function1
+    public static class GetNoteById
     {
-        [FunctionName("Function1")]
+        [FunctionName("GetNoteById")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
+        //[OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
+        [OpenApiParameter(name: "id", In = ParameterLocation.Query, Required = true, Type = typeof(Guid), Description = "The **ID** parameter")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetNoteById/{id}")] HttpRequest req, //$"{id}"
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            string idUnparsed = req.Query["id"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            var id = Guid.Parse(idUnparsed);
+            //name = name ?? data?.name;
 
-            string responseMessage = string.IsNullOrEmpty(name)
+            //string responseMessage = string.IsNullOrEmpty(name)
+            string responseMessage = string.IsNullOrEmpty(id.ToString())
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+                //: $"Hello, {id}. This HTTP triggered function executed successfully.";
+                : $"{id}.";
 
             return new OkObjectResult(responseMessage);
         }
