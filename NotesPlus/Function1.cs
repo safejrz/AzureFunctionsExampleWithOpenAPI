@@ -27,22 +27,7 @@ namespace NotesPlus
             [CosmosDB(databaseName: "%Database:Name%", collectionName: "%Database:Collection%", ConnectionStringSetting = "ConnectionStrings:CosmosDb", Id = "{id}", PartitionKey = "{category}")]
             Models.File file,
             ILogger log)        
-        {
-            //log.LogInformation("C# HTTP trigger function processed a request.");
-
-            //string idUnparsed = req.Query["id"];
-
-            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //var id = Guid.Parse(idUnparsed);
-            ////name = name ?? data?.name;
-
-            //string responseMessage = string.IsNullOrEmpty(name)
-            //string responseMessage = string.IsNullOrEmpty(id.ToString())
-            //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-            //    //: $"Hello, {id}. This HTTP triggered function executed successfully.";
-            //    : $"{id}.";
-
+        {            
             return new OkObjectResult(file);
         }
     }
